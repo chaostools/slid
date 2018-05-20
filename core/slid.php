@@ -102,7 +102,7 @@ class Slid {
 					}
 
 					if (function_exists('init')) {
-						call_user_func_array('init');
+						call_user_func('init');
 					}
 
 					call_user_func_array(strtolower($method), $matches);
