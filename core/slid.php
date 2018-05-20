@@ -53,7 +53,7 @@ class Slid {
 			} else {
 				$path = '/' . $newPrefix . basename($value, ".php");
 
-				if($value == "index.php") {
+				if ($value == "index.php") {
 					$path = '/' . rtrim($newPrefix, '/') . basename('', ".php");
 				}
 
@@ -75,25 +75,36 @@ class Slid {
 		$request_path = strtok($_SERVER['REQUEST_URI'], '?');
 		$method = $_SERVER['REQUEST_METHOD'];
 
-		if($request_path != '/')
+		if ($request_path != '/')
 			$request_path = rtrim($request_path, '/');
 
-		if(preg_match('/^\/*$/', $request_path))
+		if (preg_match('/^\/*$/', $request_path))
 			$request_path = '/';
 
 		foreach ($this->routes as $route) {
 			if (preg_match($route['regex'], $request_path, $matches)) {
 				unset($matches[0]);
 
-				if(file_exists($route['file'])) {
+				if (file_exists($route['file'])) {
 					include($route['file']);
-					echo "Include " . $route['file'];
 				} else {
 					// 404 - Not found
 					View::error(404);
 				}
 
 				if (function_exists(strtolower($method))) {
+					if (function_exists('validate')) {
+						$valid = call_user_func_array('validate', $matches);
+
+						if (!$valid) {
+							View::error(400);
+						}
+					}
+
+					if (function_exists('init')) {
+						call_user_func_array('init');
+					}
+
 					call_user_func_array(strtolower($method), $matches);
 				} else {
 					// 405 - Method not allowed
@@ -123,7 +134,7 @@ class View {
 	}
 
 	public static function error ($code, $message = false) {
-		if(!$message) {
+		if (!$message) {
 			switch ($code) {
 				case 100:
 					$message = 'Continue';
