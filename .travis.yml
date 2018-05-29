@@ -1,7 +1,18 @@
+dist: trusty
+
 language: php
+php:
+  # using major version aliases
+  - 5.5
+  - 5.6
+  - 7.0
+  - hhvm
 
 before_script:
   - phpenv config-rm xdebug.ini
 
 script:
   - if find . -name "*.php" ! -path "./vendor/*" -print0 | xargs -0 -n 1 -P 8 php -d error_reporting=E_ALL -d display_errors=On -l | grep -v "No syntax errors detected"; then exit 1; fi
+
+matrix:
+  fast_finish: true
