@@ -1,4 +1,4 @@
 language: php
 
-before_script:
+script:
   - if find . -name "*.php" ! -path "./vendor/*" -print0 | xargs -0 -n 1 -P 8 php -d error_reporting=E_ALL -d display_errors=On -l | grep -v "No syntax errors detected"; then exit 1; fi
