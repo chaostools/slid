@@ -13,17 +13,17 @@ class Slid {
 	public function __construct () {
 		header('Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS, PUT, PATCH');
 
-		$this->dir = $this->getDirectory(ROUTES_DIR);
-		$this->routes = $this->getRoutes($this->dir);
+		$this->dir = $this->getRoutesTree(ROUTES_DIR);
+		$this->generateRoutes($this->dir);
 	}
 
-	private function getDirectory ($path = '') {
+	private function getRoutesTree ($path = '') {
 		$result = [];
 		$scan = glob($path . '*');
 
 		foreach ($scan as $item) {
 			if (is_dir($item))
-				$result[basename($item)] = $this->getDirectory($item . '/');
+				$result[basename($item)] = $this->getRoutesTree($item . '/');
 			else
 				$result[] = basename($item);
 		}
@@ -31,47 +31,52 @@ class Slid {
 		return $result;
 	}
 
-	private function getRoutes ($dir, $prefix = '') {
+	private function addRoute($path, $regex, $file) {
+		$this->routes[] = [
+			'path'  => $path,
+			'regex' => $regex,
+			'file'  => $file,
+		];
+	}
+
+	private function generateRoutes ($dir, $prefix = '') {
 		if (!is_array($dir)) {
 			return false;
 		}
 
 		$routes = [];
-		foreach ($dir as $key => $value) {
-			if (is_numeric($key)) {
-				$key = '';
+		foreach ($dir as $dirname => $item) {
+			if (is_numeric($dirname)) {
+				$dirname = '';
 			}
 
 			if ($prefix == "") {
-				$newPrefix = $key;
+				$newPrefix = $dirname;
 			} else {
-				$newPrefix = $prefix . '/' . $key;
+				$newPrefix = $prefix . '/' . $dirname;
 			}
 
-			if (is_array($value)) {
-				$routes = array_merge($routes, $this->getRoutes($value, $newPrefix));
+			if (is_array($item)) {
+				$routes = array_merge($routes, $this->generateRoutes($item, $newPrefix));
 			} else {
-				$path = '/' . $newPrefix . basename($value, ".php");
+				$path = '/' . $newPrefix . basename($item, ".php");
 
-				if ($value == "index.php") {
+				if ($item == "index.php")
 					$path = '/' . rtrim($newPrefix, '/') . basename('', ".php");
-				}
 
 				$regex = preg_replace('/_\w+/', '(\w+)', $path);
 				$regex = '/^' . str_replace('/', '\/', $regex) . '$/';
 
-				$routes[] = [
-					'path'  => $path,
-					'regex' => $regex,
-					'file'  => ROUTES_DIR . $newPrefix . $value,
-				];
+				$file = ROUTES_DIR . $newPrefix . $item;
+
+				$this->addRoute($path, $regex, $file);
 			}
 		}
 
 		return $routes;
 	}
 
-	public function run () {
+	public function runRouting () {
 		$request_path = strtok($_SERVER['REQUEST_URI'], '?');
 		$method = $_SERVER['REQUEST_METHOD'];
 
@@ -92,7 +97,7 @@ class Slid {
 					View::error(404);
 				}
 
-				if (function_exists(strtolower($method))) {
+				if (function_exists($method) || function_exists('request')) {
 					if (function_exists('validate')) {
 						$valid = call_user_func_array('validate', $matches);
 
@@ -105,7 +110,12 @@ class Slid {
 						call_user_func('init');
 					}
 
-					call_user_func_array(strtolower($method), $matches);
+					if (function_exists($method)) {
+						call_user_func_array($method, $matches);
+					} elseif(function_exists('request')) {
+						array_unshift($matches, $method);
+						call_user_func_array('request', $matches);
+					}
 				} else {
 					// 405 - Method not allowed
 					View::error(405);
@@ -126,6 +136,8 @@ class Slid {
 class DB {
 	function __construct () {
 	}
+
+	// Needs a function to execute db query at the end
 }
 
 

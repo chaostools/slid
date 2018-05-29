@@ -9,5 +9,6 @@ define('CORE_DIR', 'core/');
 
 // Run
 require_once CORE_DIR . 'slid.php';
+
 $slid = new Slid();
-$slid->run();
+$slid->runRouting();
