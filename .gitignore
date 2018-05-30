@@ -105,4 +105,5 @@ fabric.properties
 .idea/**/vcs.xml
 .idea/**/modules.xml
 \.idea/
-routes/
+routes/**/*.php
+queries/*.json
