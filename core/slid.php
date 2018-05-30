@@ -95,6 +95,7 @@ class Slid {
 				} else {
 					// 404 - Not found
 					View::error(404);
+					View::console('File ' . $route['file'] . ' not found', error);
 				}
 
 				if (function_exists($method) || function_exists('request')) {
@@ -103,6 +104,7 @@ class Slid {
 
 						if (!$valid) {
 							View::error(400);
+							View::console('Invalid request', error);
 						}
 					}
 
@@ -123,6 +125,7 @@ class Slid {
 				} else {
 					// 405 - Method not allowed
 					View::error(405);
+					View::console('Method ' . $method . ' is not allowed', error);
 				}
 
 				return;
@@ -131,6 +134,7 @@ class Slid {
 
 		// 404 - Not found
 		View::error(404);
+		View::console('Page ' . $request_path . ' not found', error);
 	}
 }
 
@@ -273,6 +277,15 @@ class View {
 			include(LAYOUTS_DIR . 'error.php');
 		} else {
 			include(CORE_DIR . 'layouts/error.php');
+		}
+	}
+
+	public static function console ($data, $type = 'log') {
+		if (is_array($data) || is_object($data)) {
+			$arrayName = uniqid('array');
+			echo "<script>var $arrayName = " . json_encode($data, JSON_PRETTY_PRINT) . "; console.$type($arrayName);</script>";
+		} else {
+			echo "<script>console.$type('$data');</script>";
 		}
 	}
 }
