@@ -31,7 +31,7 @@ class Slid {
 		return $result;
 	}
 
-	private function addRoute($path, $regex, $file) {
+	private function addRoute ($path, $regex, $file) {
 		$this->routes[] = [
 			'path'  => $path,
 			'regex' => $regex,
@@ -91,7 +91,7 @@ class Slid {
 				unset($matches[0]);
 
 				if (file_exists($route['file'])) {
-					include($route['file']);
+					include $route['file'];
 				} else {
 					// 404 - Not found
 					View::error(404);
@@ -112,9 +112,13 @@ class Slid {
 
 					if (function_exists($method)) {
 						call_user_func_array($method, $matches);
-					} elseif(function_exists('request')) {
+					} else if (function_exists('request')) {
 						array_unshift($matches, $method);
 						call_user_func_array('request', $matches);
+					}
+
+					if (function_exists('finalize')) {
+						call_user_func('finalize');
 					}
 				} else {
 					// 405 - Method not allowed
@@ -134,8 +138,7 @@ class Slid {
 // STATIC:
 
 class DB {
-	function __construct () {
-	}
+	public static $db;
 
 	// Needs a function to execute db query at the end
 }
