@@ -11,8 +11,6 @@ class Slid {
 	private $routes = [];
 
 	public function __construct () {
-		header('Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS, PUT, PATCH');
-
 		$this->dir = $this->getRoutesTree(ROUTES_DIR);
 		$this->generateRoutes($this->dir);
 	}
