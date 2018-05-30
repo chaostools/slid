@@ -283,16 +283,26 @@ class View {
 			$arrayName = uniqid('array');
 			echo "<script>var $arrayName = " . json_encode($data, JSON_PRETTY_PRINT) . "; console.$type($arrayName);</script>";
 		} else {
-			if(is_null($data))
-				$data = 'null'; // var_export would output NULL (not null) which results in undefined in JavaScript
-				// echo "<script>var NULL = null;</script>";     < Alternative
+			switch (gettype($data)) {
+				case 'string':
+					$data = '`' . $data . '`';
+					break;
 
-			echo "<script>console.$type(" . var_export($data, true) . ");</script>";
+				case 'NULL':
+					$data = null;
+					break;
+
+				case 'boolean':
+					$data = ($data) ? 'true' : 'false';
+					break;
+			}
+
+			echo "<script>console.$type($data);</script>";
 		}
 	}
 
 	// Unmodified output of data
-	public static function raw($data) {
+	public static function raw ($data) {
 		echo $data;
 	}
 }
