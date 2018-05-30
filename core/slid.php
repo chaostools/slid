@@ -285,7 +285,16 @@ class View {
 			$arrayName = uniqid('array');
 			echo "<script>var $arrayName = " . json_encode($data, JSON_PRETTY_PRINT) . "; console.$type($arrayName);</script>";
 		} else {
-			echo "<script>console.$type('$data');</script>";
+			if(is_null($data))
+				$data = 'null'; // var_export would output NULL (not null) which results in undefined in JavaScript
+				// echo "<script>var NULL = null;</script>";     < Alternative
+
+			echo "<script>console.$type(" . var_export($data, true) . ");</script>";
 		}
+	}
+
+	// Unmodified output of data
+	public static function raw($data) {
+		echo $data;
 	}
 }
