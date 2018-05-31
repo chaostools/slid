@@ -11,6 +11,8 @@ class Slid {
 	private $routes = [];
 
 	public function __construct () {
+		set_error_handler('Slid::error');
+
 		$this->dir = $this->getRoutesTree(ROUTES_DIR);
 		$this->generateRoutes($this->dir);
 	}
@@ -133,6 +135,43 @@ class Slid {
 		// 404 - Not found
 		View::error(404);
 		View::console('Page ' . $request_path . ' not found', error);
+	}
+
+
+	// Callback for set_error_handler
+	public static function error($errno, $errstr, $errfile, $errline) {
+		switch ($errno) {
+			case E_USER_ERROR:
+			case E_ERROR:
+				$error_level = 'Error';
+				$console_function = 'error';
+				break;
+
+			case E_USER_WARNING:
+			case E_WARNING:
+				$error_level = 'Warning';
+				$console_function = 'warn';
+				break;
+
+			case E_USER_NOTICE:
+			case E_NOTICE:
+				$error_level = 'Notice';
+				$console_function = 'info';
+				break;
+
+			default:
+				$error_level = 'Info';
+				$console_function = 'log';
+				break;
+		}
+
+		$errfile = str_replace('\\', '\/', $errfile);
+
+		$error_message = "$error_level: $errstr in $errfile on line $errline";
+
+		View::console($error_message, $console_function);
+
+		return true;
 	}
 }
 
