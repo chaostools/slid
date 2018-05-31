@@ -107,5 +107,5 @@ fabric.properties
 \.idea/
 routes/**/*.php
 queries/*.json
-views/**/*.html
+views/**/*.*
 layouts/**/*.html
