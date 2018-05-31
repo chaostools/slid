@@ -1,6 +1,7 @@
 <?php
 
 // CONFIGURATION
+define('DATABASE', true);
 define('DB_HOST', 'localhost');
 define('DB_USER', 'root');
 define('DB_PASSWORD', '');
@@ -17,7 +18,7 @@ define('CORE_DIR', 'core/');
 
 
 // Run
-require_once CORE_DIR . 'slid.php';
+require_once CORE_DIR . 'Slid.php';
 
 $slid = new Slid();
 $slid->runRouting();
