@@ -46,23 +46,31 @@
 
 class Simplates {
 	private static $conversions = [
-		'/\{ *((?:if|elseif|while|for|foreach|switch) *\(.*\)) *\}/' => '<?php $1: ?>',
+		'/\{ *((?:if|elseif|while|for|foreach|switch) *\(.*?\)) *\}/' => '<?php $1: ?>',
 		/*  All {...(...)} tags */
-		'/\{ *\/ *(if|while|for|foreach|switch) *\}/'                => '<?php end$1; ?>',
+
+		'/\{ *\/ *(if|while|for|foreach|switch) *\}/'                 => '<?php end$1; ?>',
 		/* All {/...} tags */
-		'/\{ *(case .*) *\}/'                                        => '<?php $1: ?>',
+
+		'/\{ *(case .+?) *\}/'                                        => '<?php $1: ?>',
 		/* Case tag */
-		'/\{ *(else|default) *\}/'                                   => '<?php $1: ?>',
+
+		'/\{ *(else|default) *\}/'                                    => '<?php $1: ?>',
 		/* All {...} tags which convert to <?php ...: ?> */
-		'/\{ *(break|continue) *\}/'                                 => '<?php $1; ?>',
+
+		'/\{ *(break|continue) *\}/'                                  => '<?php $1; ?>',
 		/* All {...} tags which convert to <?php ...; ?> */
-		'/\{ *(\$[^ ][^\}]+) *\}/'                                       => '<?php echo $1; ?>',
+
+		'/\{ *(\$[^ ]+?) *\}/'                                        => '<?php echo $1; ?>',
 		/* All {$...} tags (Variables) */
-		'/\{ *\@ *([^ ].*) *\}/'                                     => '<?php $1; ?>',
+
+		'/\{ *\@ *(.*?) *\}/'                                         => '<?php $1; ?>',
 		/* All {@...} tags (Expressions) */
-		'/\{ *(include *(.*)) *\}/'                                  => '<?php echo file_get_contents($2); ?>',
+
+		'/\{ *include *(.*?) *\}/'                                    => '<?php echo file_get_contents($1); ?>',
 		/* Include tag */
-		'/\{\*(.+?)\*\}/s'                                           => '<!--$1-->'
+
+		'/\{\*(.+?)\*\}/s'                                            => '<!--$1-->'
 		/* Comments */
 	];
 
