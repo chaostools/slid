@@ -3,9 +3,6 @@
 class View {
 	private static $variables = [];
 
-	function __construct () {
-	}
-
 	public static function setVar($key, $value) {
 		self::$variables[$key] = $value;
 	}

@@ -49,7 +49,7 @@ class DB {
 	}
 
 	// Read JSON file containing queries
-	public static function getQueries ($queryFile) {
+	public static function getQueriesFromFile ($queryFile) {
 		if(!isset(self::$queries[$queryFile])) {
 			$rawQueries = json_decode(file_get_contents(QUERIES_DIR . $queryFile . '.json'), true);
 			$queries = self::flattenArray($rawQueries);
@@ -64,7 +64,7 @@ class DB {
 		$queryFile = explode('.', $queryName)[0];
 		$queryName = substr($queryName, strlen($queryFile . '.'));
 
-		$queries = self::getQueries($queryFile);
+		$queries = self::getQueriesFromFile($queryFile);
 
 		return $queries[$queryName];
 	}
@@ -75,15 +75,15 @@ class DB {
 
 		$query = self::getQuery($queryName);
 
-		preg_match_all('/\{(\w+)\}/', $query, $matches);
+		preg_match_all('/\{(\w+)\}/', $query, $varReplacements);
 
-		foreach ($matches[1] as $match) {
-			if (!isset($vars[$match])) {
+		foreach ($varReplacements[1] as $varName) {
+			if (!isset($vars[$varName])) {
 				continue;
 			}
 
-			$parameter = self::$db->real_escape_string($vars[$match]);
-			$query = str_replace('{' . $match . '}', $parameter, $query);
+			$parameter = self::$db->real_escape_string($vars[$varName]);
+			$query = str_replace('{' . $varName . '}', $parameter, $query);
 		}
 
 		if ($group !== '') {
@@ -109,13 +109,25 @@ class DB {
 		return self::$db->query($query);
 	}
 
+	public static function getRows($result) {
+		$rows = [];
+
+		if ($result->num_rows > 0) {
+			while($row = $result->fetch_assoc()) {
+				$rows[] = $row;
+			}
+		}
+
+		return $rows;
+	}
+
 	// Return errors
-	public static function error () {
+	public static function getError () {
 		return self::$db->error;
 	}
 
 	// Return last insert ID
-	public static function insert_id () {
+	public static function getInsertID () {
 		return self::$db->insert_id;
 	}
 }
