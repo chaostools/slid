@@ -14,15 +14,28 @@ class View {
 	}
 
 	// Load spl files located in view/ and convert them, then execute them
-	public static function simplates($filePath) {
+	public static function simplates($filePath, $layout = 'default') {
+		$layoutPath = LAYOUTS_DIR;
+		if($layout == 'default')
+			$layoutPath = CORE_DIR . 'layouts/';
+
+		if(file_exists($layoutPath . $layout . '.spl.html')) {
+			// Convert the .spl.html file to a .php file
+			Simplates::convert($layoutPath . $layout . '.spl.html', LAYOUTS_DIR . $layout . '.php');
+		} else {
+			// Error
+			View::error(500);
+			View::console('Layout-File ' . $layoutPath . $layout . '.spl.html not found', 'error');
+		}
+
 		if(file_exists(VIEWS_DIR . $filePath . '.spl.html')) {
 			// Convert the .spl.html file to a .php file
 			Simplates::convert(VIEWS_DIR . $filePath . '.spl.html', VIEWS_DIR . $filePath . '.php');
 		}
 
-		if(file_exists(VIEWS_DIR . $filePath . '.php')) {
+		if(file_exists(VIEWS_DIR . $filePath . '.php') && file_exists(LAYOUTS_DIR . $layout . '.php')) {
 			extract(self::$variables);
-			include(VIEWS_DIR . $filePath . '.php');
+			include(LAYOUTS_DIR . $layout . '.php');
 		} else {
 			View::error(500);
 			View::console('File ' . VIEWS_DIR . $filePath . '.php not found', 'error');

@@ -5,41 +5,51 @@
 	Conversions:
 	- VARIABLES -
 	{$var}     ---->     <?php echo $var; ?>
+
 	- IF -
 	{if(condition)}	    ---->	<?php if(condition): ?>
 	{elseif(condition)} ---->	<?php elseif(condition): ?>
 	{else} 		    ---->	<?php else: ?>
 	{/if}		    ---->	<?php endif; ?>
+
 	- WHILE -
 	{while(condition)}  ---->	<?php while(condition): ?>
 	{/while}	    ---->	<?php endwhile; ?>
+
 	- FOR -
 	{for(expr1; expr2; expr3)}  ---->	<?php for(expr1; expr2; expr3): ?>
 	{/for}			    ---->	<?php endfor; ?>
+
 	- FOREACH -
 	{foreach(array as key => value)}    ---->	<?php foreach(array as key => value): ?>
 	{/foreach}			    ---->	<?php endforeach; ?>
+
 	- BREAK & CONTINUE -
 	{break}     ---->	<?php break; ?>
 	{continue}  ---->	<?php continue; ?>
+
 	- SWITCH -
 	{switch(var)}       ---->	<?php switch(var): ?>
 	{case condition}    ---->	<?php case condition: ?>
 	{default}	    ---->	<?php default: ?>
 	{/switch}	    ---->	<?php endswitch; ?>
+
 	- INCLUDE -
 	{include ...}     ---->     <?php echo file_get_contents(...); ?>
 	example: {include "/templates/footer.php"} -> <?php echo file_get_contents("/templates/footer.php"); ?>
 	example: {include $file}                   -> <?php echo file_get_contents("$file"); ?>
+
 	- EXPRESSIONS -
 	{@expr}     ---->     <?php expr; ?>
 	Shouldn't be used to much in templates!
 	example: {@$i++}                -> <?php $i++; ?>
 	example: {@event()}             -> <?php event(); ?>
 	example: {@echo ucfirst($var)}  -> <?php echo ucfirst($var); ?>
+
 	- COMMENTS -
 	{* comment text *}     ---->     <!-- comment text -->
 	Also works for multiline!
+
 	That's it.
 */
 
@@ -70,8 +80,11 @@ class Simplates {
 		'/\{ *include *(.*?) *\}/'                                    => '<?php echo file_get_contents($1); ?>',
 		/* Include tag */
 
-		'/\{\*(.+?)\*\}/s'                                            => '<!--$1-->'
+		'/\{\*(.+?)\*\}/s'                                            => '<!--$1-->',
 		/* Comments */
+
+		'/\{ *(content) *\}/'                                         => '<?php include(VIEWS_DIR . $filePath . ".php"); ?>'
+	    /* Only for Layouts, include the content */
 	];
 
 	private static $regex, $replacement;
