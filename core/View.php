@@ -54,14 +54,14 @@ class View {
 	}
 
 	public static function file ($file, $mime = false) {
-		if (file_exists($file)) {
-			if (!$mime) {
-				$mime = self::mime_type(pathinfo($file, PATHINFO_EXTENSION));
-			}
+		if (!file_exists($file) && !preg_match('/^https?:\/\//', $file))
+			return false;
 
-			header('Content-Type: ' . $mime);
-			echo file_get_contents($file);
-		}
+		if (!$mime)
+			$mime = self::mime_type(pathinfo($file, PATHINFO_EXTENSION));
+
+		header('Content-Type: ' . $mime);
+		echo file_get_contents($file);
 	}
 
 	public static function html ($file) {
