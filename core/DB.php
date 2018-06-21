@@ -1,5 +1,6 @@
 <?php
 
+
 class DB {
 	public static $db;
 
@@ -50,7 +51,7 @@ class DB {
 
 	// Read JSON file containing queries
 	public static function getQueriesFromFile ($queryFile) {
-		if(!isset(self::$queries[$queryFile])) {
+		if (!isset(self::$queries[$queryFile])) {
 			$rawQueries = json_decode(file_get_contents(QUERIES_DIR . $queryFile . '.json'), true);
 			$queries = self::flattenArray($rawQueries);
 
@@ -96,7 +97,7 @@ class DB {
 		return self::rawQuery($query);
 	}
 
-	public static function executeGroup($groupName) {
+	public static function executeGroup ($groupName) {
 		foreach (self::$groups[$groupName] as $query) {
 			self::rawQuery($query);
 		}
@@ -109,11 +110,11 @@ class DB {
 		return self::$db->query($query);
 	}
 
-	public static function getRows($result) {
+	public static function getRows ($result) {
 		$rows = [];
 
 		if ($result->num_rows > 0) {
-			while($row = $result->fetch_assoc()) {
+			while ($row = $result->fetch_assoc()) {
 				$rows[] = $row;
 			}
 		}

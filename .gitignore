@@ -109,3 +109,4 @@ routes/**/*.php
 queries/*.json
 views/**/*.*
 layouts/**/*.html
+!layouts/default.spl.html

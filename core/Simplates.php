@@ -83,7 +83,7 @@ class Simplates {
 		'/\{\*(.+?)\*\}/s'                                            => '<!--$1-->',
 		/* Comments */
 
-		'/\{ *(content) *\}/'                                         => '<?php include(VIEWS_DIR . $filePath . ".php"); ?>'
+		'/\{ *(content) *\}/'                                         => '<?php include(VIEWS_DIR . $view . ".php"); ?>'
 	    /* Only for Layouts, include the content */
 	];
 
@@ -121,9 +121,7 @@ class Simplates {
 			return $converted;
 		} else {
 			// Else write the converted file data to the output file
-			file_put_contents($output_file, $converted);
-
-			return true;
+			return file_put_contents($output_file, $converted);
 		}
 	}
 
