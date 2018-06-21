@@ -121,9 +121,7 @@ class Simplates {
 			return $converted;
 		} else {
 			// Else write the converted file data to the output file
-			file_put_contents($output_file, $converted);
-
-			return true;
+			return file_put_contents($output_file, $converted);
 		}
 	}
 

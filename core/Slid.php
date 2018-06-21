@@ -10,6 +10,7 @@ if (DATABASE) {
 
 require CORE_DIR . 'View.php';
 
+
 class Slid {
 	private $dir = [];
 
@@ -144,7 +145,7 @@ class Slid {
 
 
 	// Callback for set_error_handler
-	public static function error($errno, $errstr, $errfile, $errline) {
+	public static function error ($errno, $errstr, $errfile, $errline) {
 		switch ($errno) {
 			case E_USER_ERROR:
 			case E_ERROR:

@@ -1,50 +1,56 @@
 <?php
 
+
 class View {
 	private static $variables = [];
 
-	public static function setVar($key, $value) {
+	public static function setVar ($key, $value) {
 		self::$variables[$key] = $value;
 	}
 
-	public static function setVars($vars) {
+	public static function setVars ($vars) {
 		foreach ($vars as $key => $value) {
 			self::setVar($key, $value);
 		}
 	}
 
 	// Load spl files located in view/ and convert them, then execute them
-	public static function simplates($filePath, $layout = 'default') {
-		$layoutPath = LAYOUTS_DIR;
-		if($layout == 'default')
-			$layoutPath = CORE_DIR . 'layouts/';
-
-		if(file_exists($layoutPath . $layout . '.spl.html')) {
+	public static function simplates ($view, $layout = 'default') {
+		if (file_exists(LAYOUTS_DIR . $layout . '.spl.html')) {
 			// Convert the .spl.html file to a .php file
-			Simplates::convert($layoutPath . $layout . '.spl.html', LAYOUTS_DIR . $layout . '.php');
+			Simplates::convert(LAYOUTS_DIR . $layout . '.spl.html', LAYOUTS_DIR . $layout . '.php');
 		} else {
 			// Error
 			View::error(500);
-			View::console('Layout-File ' . $layoutPath . $layout . '.spl.html not found', 'error');
+			View::console('Layout-File ' . LAYOUTS_DIR . $layout . '.spl.html not found', 'error');
 		}
 
-		if(file_exists(VIEWS_DIR . $filePath . '.spl.html')) {
+		if (file_exists(VIEWS_DIR . $view . '.spl.html')) {
 			// Convert the .spl.html file to a .php file
-			Simplates::convert(VIEWS_DIR . $filePath . '.spl.html', VIEWS_DIR . $filePath . '.php');
+			Simplates::convert(VIEWS_DIR . $view . '.spl.html', VIEWS_DIR . $view . '.php');
+		} else {
+			// Error
+			View::error(500);
+			View::console('View-File ' . VIEWS_DIR . $layout . '.spl.html not found', 'error');
 		}
 
-		if(file_exists(VIEWS_DIR . $filePath . '.php') && file_exists(LAYOUTS_DIR . $layout . '.php')) {
+		if (file_exists(VIEWS_DIR . $view . '.php') && file_exists(LAYOUTS_DIR . $layout . '.php')) {
 			extract(self::$variables);
-			include(LAYOUTS_DIR . $layout . '.php');
+
+			if ($layout) {
+				include(LAYOUTS_DIR . $layout . '.php');
+			} else {
+				include(VIEWS_DIR . $view . '.php');
+			}
 		} else {
 			View::error(500);
-			View::console('File ' . VIEWS_DIR . $filePath . '.php not found', 'error');
+			View::console('File ' . VIEWS_DIR . $view . '.php not found', 'error');
 		}
 	}
 
-	public static function file($file, $mime = false) {
-		if(file_exists($file)) {
-			if(!$mime) {
+	public static function file ($file, $mime = false) {
+		if (file_exists($file)) {
+			if (!$mime) {
 				$mime = self::mime_type(pathinfo($file, PATHINFO_EXTENSION));
 			}
 
@@ -53,27 +59,27 @@ class View {
 		}
 	}
 
-	public static function html($file) {
+	public static function html ($file) {
 		self::file($file, 'text/html');
 	}
 
-	public static function xml($file) {
+	public static function xml ($file) {
 		self::file($file, 'text/xml');
 	}
 
-	public static function css($file) {
+	public static function css ($file) {
 		self::file($file, 'text/css');
 	}
 
-	public static function js($file) {
+	public static function js ($file) {
 		self::file($file, 'application/javascript');
 	}
 
-	public static function txt($file) {
+	public static function txt ($file) {
 		self::file($file, 'text/plain');
 	}
 
-	public static function json($data, $json_option) {
+	public static function json ($data, $json_option) {
 		header('Content-Type: application/json');
 		echo json_encode($data, $json_option);
 	}
@@ -234,9 +240,8 @@ class View {
 		echo $data;
 	}
 
-	private static function mime_type($ext = null)
-	{
-		$types = array(
+	private static function mime_type ($ext = null) {
+		$types = [
 			'ai'      => 'application/postscript',
 			'aif'     => 'audio/x-aiff',
 			'aifc'    => 'audio/x-aiff',
@@ -394,8 +399,8 @@ class View {
 			'xul'     => 'application/vnd.mozilla.xul+xml',
 			'xwd'     => 'image/x-xwindowdump',
 			'xyz'     => 'chemical/x-xyz',
-			'zip'     => 'application/zip'
-		);
+			'zip'     => 'application/zip',
+		];
 
 		if (is_null($ext)) return $types;
 
