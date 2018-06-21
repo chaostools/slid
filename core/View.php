@@ -213,7 +213,7 @@ class View {
 		if (file_exists(LAYOUTS_DIR . 'error.php')) {
 			include(LAYOUTS_DIR . 'error.php');
 		} else {
-			include(CORE_DIR . 'layouts/error.php');
+			include(CORE_DIR . 'views/error.php');
 		}
 	}
 
