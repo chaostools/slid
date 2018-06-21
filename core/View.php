@@ -210,8 +210,8 @@ class View {
 		}
 
 		http_response_code($code);
-		if (file_exists(LAYOUTS_DIR . 'error.php')) {
-			include(LAYOUTS_DIR . 'error.php');
+		if (file_exists(VIEWS_DIR . 'error.php')) {
+			include(VIEWS_DIR . 'error.php');
 		} else {
 			include(CORE_DIR . 'views/error.php');
 		}
