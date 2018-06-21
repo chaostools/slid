@@ -16,15 +16,19 @@ class View {
 
 	// Load spl files located in view/ and convert them, then execute them
 	public static function simplates ($view, $layout = 'default') {
-		if (file_exists(LAYOUTS_DIR . $layout . '.spl.html')) {
-			// Convert the .spl.html file to a .php file
-			Simplates::convert(LAYOUTS_DIR . $layout . '.spl.html', LAYOUTS_DIR . $layout . '.php');
-		} else {
-			// Error
-			View::error(500);
-			View::console('Layout-File ' . LAYOUTS_DIR . $layout . '.spl.html not found', 'error');
+		if ($layout) {
+			// Layout converting
+			if (file_exists(LAYOUTS_DIR . $layout . '.spl.html')) {
+				// Convert the .spl.html file to a .php file
+				Simplates::convert(LAYOUTS_DIR . $layout . '.spl.html', LAYOUTS_DIR . $layout . '.php');
+			} else {
+				// Error
+				View::error(500);
+				View::console('Layout-File ' . LAYOUTS_DIR . $layout . '.spl.html not found', 'error');
+			}
 		}
 
+		// View converting
 		if (file_exists(VIEWS_DIR . $view . '.spl.html')) {
 			// Convert the .spl.html file to a .php file
 			Simplates::convert(VIEWS_DIR . $view . '.spl.html', VIEWS_DIR . $view . '.php');
@@ -34,17 +38,18 @@ class View {
 			View::console('View-File ' . VIEWS_DIR . $layout . '.spl.html not found', 'error');
 		}
 
-		if (file_exists(VIEWS_DIR . $view . '.php') && file_exists(LAYOUTS_DIR . $layout . '.php')) {
+		if (file_exists(VIEWS_DIR . $view . '.php')) {
+			// Make template variables public so the view is able to use them
 			extract(self::$variables);
 
-			if ($layout) {
+			if ($layout && file_exists(LAYOUTS_DIR . $layout . '.php')) {
 				include(LAYOUTS_DIR . $layout . '.php');
 			} else {
 				include(VIEWS_DIR . $view . '.php');
 			}
 		} else {
 			View::error(500);
-			View::console('File ' . VIEWS_DIR . $view . '.php not found', 'error');
+			View::console('Something went wrong while converting view - File ' . VIEWS_DIR . $view . '.php not found', 'error');
 		}
 	}
 
