@@ -24,10 +24,10 @@ jobs:
         - php phpdoc.phar -d core/ -t docs/ --ignore core/views/ --title "Slid Docs" --template="xml"
         - composer global require "evert/phpdoc-md"
         - git clone https://github.com/Skayo/slid.wiki.git slid-wiki
-        - phpdocmd docs/structure.xml slid-wiki
+        - /home/travis/.composer/vendor/bin/phpdocmd docs/structure.xml slid-wiki
         - cd slid-wiki
         - git add .
         - git commit -m "Updated API Docs with PHPDoc"
-        - git remote add origin-wiki https://SkayoBot:{$GITHUB_ACCESS_TOKEN}@github.com/Skayo/slid.wiki.git
+        - git remote add origin-wiki https://{$GITHUB_ACCESS_TOKEN}@github.com/Skayo/slid.wiki.git
         - git push --set-upstream origin-wiki
       php: 7.0
