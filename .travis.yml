@@ -27,7 +27,7 @@ jobs:
       script:
         - php phpdoc.phar -d core/ -t docs/ --ignore core/views/ --title "Slid Docs" --template="xml"
         - /home/travis/.composer/vendor/bin/phpdocmd docs/structure.xml slid-wiki --index "Classes.md" --lt "%c"
-        - for file in slid-wiki/*; do echo $file | php -R 'file_put_contents($argn, html_entity_decode(file_get_contents($argn)));'; done
+        - find slid-wiki/* | php -R 'file_put_contents($argn, html_entity_decode(file_get_contents($argn)));'
       after_success:
         - cd slid-wiki
         - git config user.email "frederike.gnampf@gmail.com"
