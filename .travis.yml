@@ -27,11 +27,10 @@ jobs:
       script:
         - php phpdoc.phar -d core/ -t docs/ --ignore core/views/ --title "Slid Docs" --template="xml"
         - /home/travis/.composer/vendor/bin/phpdocmd docs/structure.xml slid-wiki
-      before_deploy:
+      after_success:
         - cd slid-wiki
         - git config user.email "frederike.gnampf@gmail.com"
         - git config user.name "SkayoBot"
-      deploy:
         - git add .
         - git commit -m "Updated API Docs with PHPDoc"
         - git remote add origin-wiki https://{$GITHUB_ACCESS_TOKEN}@github.com/Skayo/slid.wiki.git
