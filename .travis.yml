@@ -22,12 +22,12 @@ jobs:
       script:
         - wget -O phpdoc.phar http://phpdoc.org/phpDocumentor.phar
         - php phpdoc.phar -d core/ -t docs/ --ignore core/views/ --title "Slid Docs" --template="xml"
-        - composer require "evert/phpdoc-md"
+        - composer global require "evert/phpdoc-md"
         - git clone https://github.com/Skayo/slid.wiki.git slid-wiki
         - phpdocmd docs/structure.xml slid-wiki
         - cd slid-wiki
-        - git remote add origin https://SkayoBot:{$GITHUB_ACCESS_TOKEN}@github.com/Skayo/slid.wiki.git
         - git add .
-        - git commit -m "Updated API Docs with PHPdoc"
-        - git push
+        - git commit -m "Updated API Docs with PHPDoc"
+        - git remote add origin-wiki https://SkayoBot:{$GITHUB_ACCESS_TOKEN}@github.com/Skayo/slid.wiki.git
+        - git push --set-upstream origin-wiki
       php: 7.0
