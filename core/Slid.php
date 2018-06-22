@@ -70,7 +70,7 @@ class Slid {
 				if ($item === 'index.php')
 					$path = '/' . rtrim($newPrefix, '/') . basename('', '.php');
 
-				$regex = preg_replace('/_\w+/', '(\w+)', $path);
+				$regex = preg_replace('/\/_\w+/', '/([\w-]+)', $path);
 				$regex = '/^' . str_replace('/', '\/', $regex) . '$/';
 
 				$file = ROUTES_DIR . $newPrefix . $item;
