@@ -4,6 +4,11 @@
 class View {
 	private static $variables = [];
 
+	/**
+	 * Set a template variable
+	 * @param $key string Template variable key
+	 * @param $value mixed  Template variable value
+	 */
 	public static function setVar ($key, $value) {
 		self::$variables[$key] = $value;
 	}
