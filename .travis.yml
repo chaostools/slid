@@ -29,6 +29,8 @@ jobs:
         - /home/travis/.composer/vendor/bin/phpdocmd docs/structure.xml slid-wiki --index "Classes.md" --lt "%c"
         - pwd
         - ls
+        - ls slid-wiki
+        - find slid-wiki/
         - find slid-wiki/* | php -R 'file_put_contents($argn, html_entity_decode(file_get_contents($argn)));'
       after_success:
         - cd slid-wiki
