@@ -31,6 +31,7 @@ jobs:
         target-branch: gh-pages
         local-dir: docs
         committer-from-gh: true
+        verbose: true
         on:
           branch: master
       php: 7.0
