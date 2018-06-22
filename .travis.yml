@@ -21,9 +21,7 @@ jobs:
     - stage: deploy
       script:
         - wget -O phpdoc.phar http://phpdoc.org/phpDocumentor.phar
-        - php phpdoc.phar -d ./core -t ./docs
-        - ls
-        - ls docs
+        - php phpdoc.phar -d ./core -t ./docs -i ./core/views --title "Slid Docs"
       deploy:
         provider: pages
         skip-cleanup: true
