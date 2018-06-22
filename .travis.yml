@@ -28,6 +28,7 @@ jobs:
         - php phpdoc.phar -d core/ -t docs/ --ignore core/views/ --title "Slid Docs" --template="xml"
         - /home/travis/.composer/vendor/bin/phpdocmd docs/structure.xml slid-wiki --index "Classes.md" --lt "%c"
         - find slid-wiki -name "*.md"
+        - php -r 'print_r(glob("slid-wiki/*.md"));'
         - find slid-wiki -name "*.md" | php -R 'file_put_contents($argn, html_entity_decode(file_get_contents($argn)));'
       after_success:
         - cd slid-wiki
