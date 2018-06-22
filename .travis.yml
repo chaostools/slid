@@ -19,13 +19,19 @@ matrix:
 jobs:
   include:
     - stage: deploy
-      script:
+      install:
         - wget -O phpdoc.phar http://phpdoc.org/phpDocumentor.phar
-        - php phpdoc.phar -d core/ -t docs/ --ignore core/views/ --title "Slid Docs" --template="xml"
         - composer global require "evert/phpdoc-md"
+      before_script:
         - git clone https://github.com/Skayo/slid.wiki.git slid-wiki
+      script:
+        - php phpdoc.phar -d core/ -t docs/ --ignore core/views/ --title "Slid Docs" --template="xml"
         - /home/travis/.composer/vendor/bin/phpdocmd docs/structure.xml slid-wiki
+      before_deploy:
         - cd slid-wiki
+        - git config user.email "frederike.gnampf@gmail.com"
+        - git config user.name "SkayoBot"
+      deploy:
         - git add .
         - git commit -m "Updated API Docs with PHPDoc"
         - git remote add origin-wiki https://{$GITHUB_ACCESS_TOKEN}@github.com/Skayo/slid.wiki.git
