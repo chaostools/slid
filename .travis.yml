@@ -33,6 +33,7 @@ jobs:
         - git config user.name "SkayoBot"
         - git add .
         - git commit -m "Updated API Docs with PHPDoc"
-        - git remote add origin-wiki https://SkayoBot:{$GITHUB_ACCESS_TOKEN}@github.com/Skayo/slid.wiki.git
-        - git push --set-upstream origin-wiki -v
+        - git remote remove origin
+        - git remote add origin https://Skayo:{$GITHUB_PW}@github.com/Skayo/slid.wiki.git
+        - git push -u origin master
       php: 7.0
