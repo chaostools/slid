@@ -15,3 +15,9 @@ script:
 
 matrix:
   fast_finish: true
+
+jobs:
+  include:
+    - stage: deploy
+      script: echo Deploy
+      php: 7.0
