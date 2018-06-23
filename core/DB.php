@@ -66,8 +66,9 @@ class DB {
 	 *     "bool" => true
 	 *   ]
 	 * ]
-	 * ```php
+	 * ```
 	 * converts to:
+	 * ```php
 	 * [
 	 *   "test" => "value",
 	 *   "testArray.num" => 12,
