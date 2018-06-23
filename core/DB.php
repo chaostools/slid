@@ -76,7 +76,7 @@ class DB {
 	 * ]
 	 * ```
 	 *
-	 * @param array  $arr The array to flatten to single-dimension
+	 * @param array  $arr    The array to flatten to single-dimension
 	 * @param string $prefix Don't mind this parameter, it's just needed for recursion
 	 *
 	 * @return array|bool The flattened (single-dimensional) array
@@ -131,9 +131,9 @@ class DB {
 	 *
 	 * @used-by DB::query
 	 *
-	 * @param $queryName The name of the query. Looks like this: ``queryfile.category.subcategory.key``. The
-	 *                   query file is extracted from the name and the rest is basically a path to the wanted query in
-	 *                   the multidimensional array in the query file.
+	 * @param string $queryName The name of the query. Looks like this: ``queryfile.category.subcategory.key``. The
+	 *                          query file is extracted from the name and the rest is basically a path to the wanted query in
+	 *                          the multidimensional array in the query file.
 	 *
 	 * @return string The requested mysql query
 	 */
@@ -150,11 +150,11 @@ class DB {
 	 * Execute a query.
 	 *
 	 * @param string $queryName The name of the query. See DB::getQuery for details.
-	 * @param array $vars The variables to replace in the query. The variables are automatically escaped and
-	 *                    therefore not vulnerable to mysql injections. Variables in a query look like this {key}
-	 *                    and are then replaced by the value
-	 * @param string $group If this parameter is set, then the query won't get executed but only added to the
-	 *                      specified group. See DB::executeGroup() for details.
+	 * @param array  $vars      The variables to replace in the query. The variables are automatically escaped and
+	 *                          therefore not vulnerable to mysql injections. Variables in a query look like this {key}
+	 *                          and are then replaced by the value
+	 * @param string $group     If this parameter is set, then the query won't get executed but only added to the
+	 *                          specified group. See DB::executeGroup() for details.
 	 *
 	 * @return bool|mysqli_result False, if the query wasn't found, true if $group was set and the query was
 	 *                            successfully added or just a mysqli_result object if the query got successfully executed.
@@ -164,7 +164,7 @@ class DB {
 
 		$query = self::getQuery($queryName);
 
-		if(!$query)
+		if (!$query)
 			return false;
 
 		preg_match_all('/\{(\w+)\}/', $query, $varReplacements);
@@ -183,6 +183,7 @@ class DB {
 				self::$groups[$group] = [];
 
 			self::$groups[$group][] = $query;
+
 			return true;
 		}
 
@@ -193,12 +194,12 @@ class DB {
 	 * Execute all queries stored in a group.
 	 * Groups can be useful sometimes. For example to execute all the mysql calls only at the end of the execution.
 	 *
-	 * @param $groupName The name of the group where the queries are stored.
+	 * @param string $groupName The name of the group where the queries are stored.
 	 *
 	 * @return bool False if the group wasn't found, or true if all queries are executed. Does not return mysql results!
 	 */
 	public static function executeGroup ($groupName) {
-		if(!isset(self::$groups[$groupName]))
+		if (!isset(self::$groups[$groupName]))
 			return false;
 
 		foreach (self::$groups[$groupName] as $query) {
