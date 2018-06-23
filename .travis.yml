@@ -21,7 +21,7 @@ jobs:
     - stage: deploy
       install:
         - wget --quiet -O phpdoc.phar http://phpdoc.org/phpDocumentor.phar
-        - composer global require "evert/phpdoc-md"
+        - composer global require "skayo/phpdoc-md"
       before_script:
         - git clone https://github.com/Skayo/slid.wiki.git slid-wiki
       script:
