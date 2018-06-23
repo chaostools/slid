@@ -241,12 +241,23 @@ class DB {
 		return $rows;
 	}
 
-	// Return errors
+	/**
+	 * This is just a wrapper for $mysqli->error.
+	 *
+	 * @return string The error
+	 */
 	public static function getError () {
 		return self::$db->error;
 	}
 
-	// Return last insert ID
+	/**
+	 * Return the last inserted ID.
+	 * Useful in APIs to tell the client which id the created row got.
+	 * Basically a wrapper for $mysqli->insert_id
+	 *
+	 * @return mixed The last inserted ID. Usually a integer. Zero if there is no previous query or if the
+	 *               AUTO_INCREMENT value wasn't updated.
+	 */
 	public static function getInsertID () {
 		return self::$db->insert_id;
 	}
