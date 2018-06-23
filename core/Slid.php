@@ -1,4 +1,8 @@
 <?php
+/**
+ * This file includes all the core files and contains the Slid class.
+ * Include this file to get access to all Slid features and functions. (Only used by index.php)
+ */
 
 if (TEMPLATES) {
 	require CORE_DIR . 'Simplates.php';
@@ -11,11 +15,31 @@ if (DATABASE) {
 require CORE_DIR . 'View.php';
 
 
+/**
+ * Class Slid
+ *
+ * This class is only used by the index.php file and handles routing and error outputting
+ */
 class Slid {
+	/**
+	 * Contains multidimensional array of the files in the routes/ directory
+	 *
+	 * @var array
+	 */
 	private $dir = [];
 
+	/**
+	 * Contains the generated routes
+	 *
+	 * @var array
+	 */
 	private $routes = [];
 
+	/**
+	 * Slid constructor.
+	 *
+	 * Defines an error handler and calls the route-generating functions
+	 */
 	public function __construct () {
 		set_error_handler('Slid::error');
 
@@ -23,6 +47,13 @@ class Slid {
 		$this->generateRoutes($this->dir);
 	}
 
+	/**
+	 * Goes through all the found files in the given path and returns them as a multidimensional array
+	 *
+	 * @param string $path Path to scan
+	 *
+	 * @return array A multidimensional array with all the directories and files
+	 */
 	private function getRoutesTree ($path = '') {
 		$result = [];
 		$scan = glob($path . '*');
@@ -37,6 +68,15 @@ class Slid {
 		return $result;
 	}
 
+	/**
+	 * Add a route to the routes array
+	 *
+	 * @param $path The route path (actually not used)
+	 * @param $regex The route path formatted as a regex to match the url
+	 * @param $file The path to the file of the route
+	 *
+	 * @return void
+	 */
 	private function addRoute ($path, $regex, $file) {
 		$this->routes[] = [
 			'path'  => $path,
@@ -45,6 +85,14 @@ class Slid {
 		];
 	}
 
+	/**
+	 * Generate routes from the multidimensional array, returned from getRoutesTree
+	 *
+	 * @param array  $dir The multidimensional file scan
+	 * @param string $prefix Don't mind this parameter, it's just needed for recursion
+	 *
+	 * @return array|bool Returns the generated routes or just false if $dir isn't an array
+	 */
 	private function generateRoutes ($dir, $prefix = '') {
 		if (!is_array($dir)) {
 			return false;
@@ -82,6 +130,11 @@ class Slid {
 		return $routes;
 	}
 
+	/**
+	 * Starts the router.
+	 * Matches the generated routes with the request url and then executes the route-file and it's functions (get,
+	 * post, init, validate, ...)
+	 */
 	public function runRouting () {
 		$request_path = strtok($_SERVER['REQUEST_URI'], '?');
 		$method = $_SERVER['REQUEST_METHOD'];
@@ -144,7 +197,16 @@ class Slid {
 	}
 
 
-	// Callback for set_error_handler
+	/**
+	 * Callback for set_error_handler to display errors in the javascript console
+	 *
+	 * @param $errno
+	 * @param $errstr
+	 * @param $errfile
+	 * @param $errline
+	 *
+	 * @return bool Always returns true
+	 */
 	public static function error ($errno, $errstr, $errfile, $errline) {
 		switch ($errno) {
 			case E_USER_ERROR:
