@@ -49,9 +49,11 @@ class View {
 	 * See the Simplates class for more info about Simplates templates
 	 *
 	 * Example:
-	 * Template file is located in views/blog/post.spl.html
+	 * ```
+	 * Template file is located in views/blog/post.spl.html  
 	 * Layout file is located in layouts/blog.spl.html
-	 * => View::simplates('blog/post', 'blog');  
+	 * => View::simplates('blog/post', 'blog');
+	 * ```
 	 *
 	 * @param string $view   The path to the template in views/. The template must have .spl.html as file extension! Do not include the file extension
 	 *                       (.spl.html) here in the parameter!
