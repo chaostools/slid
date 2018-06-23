@@ -1,25 +1,63 @@
 <?php
+/**
+ * Contains the View class
+ */
 
 
+/**
+ * Class View
+ *
+ * Handles outputting of templates, files or other data.
+ */
 class View {
+	/**
+	 * Contains the variables to use in the templates
+	 *
+	 * @var array
+	 */
 	private static $variables = [];
 
 	/**
-	 * Set a template variable
-	 * @param $key string Template variable key
+	 * Sets a template variable.
+	 * Use {$key} in templates to output the variable.
+	 *
+	 * @param $key   string Template variable key
 	 * @param $value mixed  Template variable value
+	 *
+	 * @return void
 	 */
 	public static function setVar ($key, $value) {
 		self::$variables[$key] = $value;
 	}
 
+	/**
+	 * Same as View::setVar() but for setting multiple key => value pairs at once.
+	 *
+	 * @param array $vars The array containing the key and values of the variables
+	 *
+	 * @return void
+	 */
 	public static function setVars ($vars) {
 		foreach ($vars as $key => $value) {
 			self::setVar($key, $value);
 		}
 	}
 
-	// Load spl files located in view/ and convert them, then execute them
+	/**
+	 * Loads an simplates template located in views/, converts it and then outputs the it.
+	 * The converted file is stored with a .php extension next to the .spl.html template. Just ignore it.
+	 * See the Simplates class for more info about Simplates templates
+	 *
+	 * Example:
+	 * Template file is located in views/blog/post.spl.html
+	 * Layout file is located in layouts/blog.spl.html
+	 * => View::simplates('blog/post', 'blog');
+	 *
+	 * @param string $view   The path to the template in views/. The template must have .spl.html as file extension! Do not include the file extension
+	 *                       (.spl.html) here in the parameter!
+	 * @param string $layout The layout to use. Uses default.spl.html by default. Set to false to use no layout. The layout file must have .spl.html as
+	 *                       file extension! Do not include the file extension (.spl.html) here in the parameter!
+	 */
 	public static function simplates ($view, $layout = 'default') {
 		if ($layout) {
 			// Layout converting
@@ -58,6 +96,16 @@ class View {
 		}
 	}
 
+	/**
+	 * Serve a file.
+	 * This method detects the required mime type (by using View::mime_type()), sets the needed Content-Type header and then just outputs the file.
+	 * The file can also be an URL.
+	 *
+	 * @param string $file The file to serve. For example 'static/images/example.png'
+	 * @param bool   $mime If known, the file type. If not specified it automatically detects it.
+	 *
+	 * @return bool False if file does not exist, or True if successfully outputed.
+	 */
 	public static function file ($file, $mime = false) {
 		if (!file_exists($file) && !preg_match('/^https?:\/\//', $file))
 			return false;
@@ -67,33 +115,84 @@ class View {
 
 		header('Content-Type: ' . $mime);
 		echo file_get_contents($file);
+
+		return true;
 	}
 
+	/**
+	 * Wrapper for View::file to output HTML files.
+	 * Can be some milliseconds faster because the mime type is already known.
+	 *
+	 * @param $file The HTML file
+	 */
 	public static function html ($file) {
 		self::file($file, 'text/html');
 	}
 
+	/**
+	 * Wrapper for View::file to output XML files.
+	 * Can be some milliseconds faster because the mime type is already known.
+	 *
+	 * @param $file The XML file
+	 */
 	public static function xml ($file) {
 		self::file($file, 'text/xml');
 	}
 
+	/**
+	 * Wrapper for View::file to output CSS files.
+	 * Can be some milliseconds faster because the mime type is already known.
+	 *
+	 * @param $file The CSS file
+	 */
 	public static function css ($file) {
 		self::file($file, 'text/css');
 	}
 
+	/**
+	 * Wrapper for View::file to output JavaScript files.
+	 * Can be some milliseconds faster because the mime type is already known.
+	 *
+	 * @param $file The JavaScript file
+	 */
 	public static function js ($file) {
 		self::file($file, 'application/javascript');
 	}
 
+	/**
+	 * Wrapper for View::file to output plain text files.
+	 * Can be some milliseconds faster because the mime type is already known.
+	 *
+	 * @param $file The text file
+	 */
 	public static function txt ($file) {
 		self::file($file, 'text/plain');
 	}
 
-	public static function json ($data, $json_option) {
+	/**
+	 * Output JSON data.
+	 * This method automatically sets the Content-Type header and outputs the JSON representation of a PHP variable (for example an array).
+	 * Useful for JSON APIs.
+	 *
+	 * @param array $data         The PHP variable to output.
+	 * @param int   $json_options Use this to pass options to json_encode. For example JSON_PRETTY_PRINT to output beautified JSON data
+	 *
+	 * @return void
+	 */
+	public static function json ($data, $json_options = 0) {
 		header('Content-Type: application/json');
-		echo json_encode($data, $json_option);
+		echo json_encode($data, $json_options);
 	}
 
+	/**
+	 * Outputs an error.
+	 * This method outputs the error.php file with the specified error code and message.
+	 * If there is no error.php in the views/ directory, the default Nuxt.js error page is used.
+	 * This method can be used to output a 404 for example (which is done automatically when the route was not found)
+	 *
+	 * @param int  $code    The error code. For example 404
+	 * @param bool $message The error message. If none specified, the default one for the error code is used.
+	 */
 	public static function error ($code, $message = false) {
 		if (!$message) {
 			switch ($code) {
@@ -225,6 +324,15 @@ class View {
 		}
 	}
 
+	/**
+	 * Output data to the javascript console.
+	 * Skayo loves this function! You have to try it!
+	 * You can pass arrays, integers, booleans, strings, ... and this function generates and outputs a <script> tag with the passed data.
+	 * Very useful for debugging!
+	 *
+	 * @param mixed  $data The data to output. For example an array or an integer.
+	 * @param string $type The console output type. For example 'log' to use console.log() or 'error' to use console.error(). Defaults to 'log'.
+	 */
 	public static function console ($data, $type = 'log') {
 		if (is_array($data) || is_object($data)) {
 			$arrayName = uniqid('array');
@@ -248,12 +356,25 @@ class View {
 		}
 	}
 
-	// Unmodified output of data
+	/**
+	 * Just an unmodified output of data. Basically an echo...
+	 *
+	 * @param string $data The data to output
+	 */
 	public static function raw ($data) {
 		echo $data;
 	}
 
-	private static function mime_type ($ext = null) {
+	/**
+	 * Get mime type of a file extension.
+	 * Used by View::file() to output the correct Content-Type header.
+	 *
+	 * @param string|bool $ext The extension without a dot, so for example 'png', or False to get an array with all popular file extensions as key and
+	 *                         their mime type as value.
+	 *
+	 * @return array|string|bool The mime type or the array with popular file extensions and their mime type. False if the file extension is unknown.
+	 */
+	private static function mime_type ($ext = false) {
 		$types = [
 			'ai'      => 'application/postscript',
 			'aif'     => 'audio/x-aiff',
@@ -415,10 +536,10 @@ class View {
 			'zip'     => 'application/zip',
 		];
 
-		if (is_null($ext)) return $types;
+		if (!$ext) return $types;
 
 		$lower_ext = strtolower($ext);
 
-		return isset($types[$lower_ext]) ? $types[$lower_ext] : null;
+		return isset($types[$lower_ext]) ? $types[$lower_ext] : false;
 	}
 }

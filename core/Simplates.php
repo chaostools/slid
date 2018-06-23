@@ -56,8 +56,9 @@
 */
 
 /**
- * Class Simplates.
- * Handles simplates templates conversion
+ * Class Simplates
+ *
+ * Handles simplates template conversion
  */
 class Simplates {
 	/**

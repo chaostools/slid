@@ -1,6 +1,13 @@
 <?php
+/**
+ * Contains the DB class
+ */
 
-
+/**
+ * Class DB
+ *
+ * Handles Database stuff like executing queries.
+ */
 class DB {
 	/**
 	 * Holds the mysqli class
