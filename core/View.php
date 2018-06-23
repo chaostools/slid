@@ -21,8 +21,8 @@ class View {
 	 * Sets a template variable.
 	 * Use {$key} in templates to output the variable.
 	 *
-	 * @param $key   string Template variable key
-	 * @param $value mixed  Template variable value
+	 * @param string $key   Template variable key
+	 * @param mixed  $value Template variable value
 	 *
 	 * @return void
 	 */
@@ -57,6 +57,8 @@ class View {
 	 *                       (.spl.html) here in the parameter!
 	 * @param string $layout The layout to use. Uses default.spl.html by default. Set to false to use no layout. The layout file must have .spl.html as
 	 *                       file extension! Do not include the file extension (.spl.html) here in the parameter!
+	 *
+	 * @return void
 	 */
 	public static function simplates ($view, $layout = 'default') {
 		if ($layout) {
@@ -123,50 +125,60 @@ class View {
 	 * Wrapper for View::file to output HTML files.
 	 * Can be some milliseconds faster because the mime type is already known.
 	 *
-	 * @param $file The HTML file
+	 * @param string $file The HTML file
+	 *
+	 * @return bool False if file does not exist, or True if successfully outputed.
 	 */
 	public static function html ($file) {
-		self::file($file, 'text/html');
+		return self::file($file, 'text/html');
 	}
 
 	/**
 	 * Wrapper for View::file to output XML files.
 	 * Can be some milliseconds faster because the mime type is already known.
 	 *
-	 * @param $file The XML file
+	 * @param string $file The XML file
+	 *
+	 * @return bool False if file does not exist, or True if successfully outputed.
 	 */
 	public static function xml ($file) {
-		self::file($file, 'text/xml');
+		return self::file($file, 'text/xml');
 	}
 
 	/**
 	 * Wrapper for View::file to output CSS files.
 	 * Can be some milliseconds faster because the mime type is already known.
 	 *
-	 * @param $file The CSS file
+	 * @param string $file The CSS file
+	 *
+	 * @return bool False if file does not exist, or True if successfully outputed.
 	 */
 	public static function css ($file) {
-		self::file($file, 'text/css');
+		return self::file($file, 'text/css');
 	}
 
 	/**
 	 * Wrapper for View::file to output JavaScript files.
 	 * Can be some milliseconds faster because the mime type is already known.
 	 *
-	 * @param $file The JavaScript file
+	 * @param string $file The JavaScript file
+	 *
+	 * @return bool False if file does not exist, or True if successfully outputed.
 	 */
 	public static function js ($file) {
-		self::file($file, 'application/javascript');
+		return self::file($file, 'application/javascript');
 	}
 
 	/**
 	 * Wrapper for View::file to output plain text files.
 	 * Can be some milliseconds faster because the mime type is already known.
 	 *
-	 * @param $file The text file
+	 * @param string $file The text file
+	 *
+	 * @return bool False if file does not exist, or True if successfully outputed.
 	 */
 	public static function txt ($file) {
-		self::file($file, 'text/plain');
+		return self::file($file, 'text/plain');
 	}
 
 	/**
@@ -192,6 +204,8 @@ class View {
 	 *
 	 * @param int  $code    The error code. For example 404
 	 * @param bool $message The error message. If none specified, the default one for the error code is used.
+	 *
+	 * @return void
 	 */
 	public static function error ($code, $message = false) {
 		if (!$message) {
@@ -332,6 +346,8 @@ class View {
 	 *
 	 * @param mixed  $data The data to output. For example an array or an integer.
 	 * @param string $type The console output type. For example 'log' to use console.log() or 'error' to use console.error(). Defaults to 'log'.
+	 *
+	 * @return void
 	 */
 	public static function console ($data, $type = 'log') {
 		if (is_array($data) || is_object($data)) {
@@ -360,6 +376,8 @@ class View {
 	 * Just an unmodified output of data. Basically an echo...
 	 *
 	 * @param string $data The data to output
+	 *
+	 * @return void
 	 */
 	public static function raw ($data) {
 		echo $data;
