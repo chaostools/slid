@@ -37,8 +37,9 @@ class Slid {
 
 	/**
 	 * Slid constructor.
-	 *
 	 * Defines an error handler and calls the route-generating functions
+	 *
+	 * @return void
 	 */
 	public function __construct () {
 		set_error_handler('Slid::error');
@@ -71,9 +72,9 @@ class Slid {
 	/**
 	 * Add a route to the routes array
 	 *
-	 * @param $path The route path (actually not used)
-	 * @param $regex The route path formatted as a regex to match the url
-	 * @param $file The path to the file of the route
+	 * @param $path  string The route path (actually not used)
+	 * @param $regex string The route path formatted as a regex to match the url
+	 * @param $file  string The path to the file of the route
 	 *
 	 * @return void
 	 */
@@ -134,6 +135,10 @@ class Slid {
 	 * Starts the router.
 	 * Matches the generated routes with the request url and then executes the route-file and it's functions (get,
 	 * post, init, validate, ...)
+	 *
+	 * @return void
+	 *
+	 * @todo Global route file that is called before each normal route file
 	 */
 	public function runRouting () {
 		$request_path = strtok($_SERVER['REQUEST_URI'], '?');
@@ -200,10 +205,10 @@ class Slid {
 	/**
 	 * Callback for set_error_handler to display errors in the javascript console
 	 *
-	 * @param $errno
-	 * @param $errstr
-	 * @param $errfile
-	 * @param $errline
+	 * @param $errno int
+	 * @param $errstr string
+	 * @param $errfile string
+	 * @param $errline int
 	 *
 	 * @return bool Always returns true
 	 */

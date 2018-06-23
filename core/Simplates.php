@@ -1,8 +1,10 @@
 <?php
-
+/**
+ * Contains the Simplates class
+ */
 
 /*
-	Conversions:
+	Simplate-Conversions:
 	- VARIABLES -
 	{$var}     ---->     <?php echo $var; ?>
 
@@ -53,8 +55,17 @@
 	That's it.
 */
 
-
+/**
+ * Class Simplates.
+ * Handles simplates templates conversion
+ */
 class Simplates {
+	/**
+	 * Contains the regex and values to convert the simplates tags {...} to php tags <?php ... ?>.
+	 * Key is the regex, values is the replacement.
+	 *
+	 * @var array
+	 */
 	private static $conversions = [
 		'/\{ *((?:if|elseif|while|for|foreach|switch) *\(.*?\)) *\}/' => '<?php $1: ?>',
 		/*  All {...(...)} tags */
@@ -87,8 +98,25 @@ class Simplates {
 	    /* Only for Layouts, include the content */
 	];
 
-	private static $regex, $replacement;
+	/**
+	 * Contains the regexes extracted from the above $conversions array
+	 *
+	 * @var array
+	 */
+	private static $regex;
 
+	/**
+	 * Contains the replacements extracted from the above $conversions array
+	 *
+	 * @var array
+	 */
+	private static $replacement;
+
+	/**
+	 * Initiate the simplates class.
+	 * Extracts the regexes and replacements from the $conversions array and stores them extra in $regex and
+	 * $replacement
+	 */
 	private static function init () {
 		if (!self::$regex || !self::$replacement) {
 			// Split all conversions into their own array
@@ -97,6 +125,16 @@ class Simplates {
 		}
 	}
 
+	/**
+	 * Convert the given file(s) and store it in the given output file(s), returns the converted file as a string if no
+	 * output file given
+	 *
+	 * @param string|array      $input_file The input file(s)
+	 * @param string|bool|array $output_file The output file(s) or false to return the converted input file as a string
+	 *
+	 * @return bool|string True if multiple input and output files, converted input file as a string if no output file
+	 * given or just the output of the file_put_contents that writes the output file
+	 */
 	public static function convert ($input_file, $output_file = false) {
 		self::init();
 
@@ -125,6 +163,16 @@ class Simplates {
 		}
 	}
 
+	/**
+	 * Called by Simplates::convert() if multiple input and output files given
+	 *
+	 * @param      $input_files An array of input files
+	 * @param bool $output_files An array of output files, needs to be the same length as the input files array
+	 *
+	 * @return bool Always returns true
+	 *
+	 * @throws E_USER_ERROR if input files and output files aren't the same length
+	 */
 	private static function multiple_convert ($input_files, $output_files = false) {
 		if (!$output_files || count($input_files) > count($output_files)) {
 			// If there are no output files given, throw an error
