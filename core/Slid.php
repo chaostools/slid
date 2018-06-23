@@ -72,9 +72,9 @@ class Slid {
 	/**
 	 * Add a route to the routes array
 	 *
-	 * @param $path  string The route path (actually not used)
-	 * @param $regex string The route path formatted as a regex to match the url
-	 * @param $file  string The path to the file of the route
+	 * @param string $path The route path (actually not used)
+	 * @param string $regex The route path formatted as a regex to match the url
+	 * @param string $file The path to the file of the route
 	 *
 	 * @return void
 	 */
@@ -203,12 +203,13 @@ class Slid {
 
 
 	/**
-	 * Callback for set_error_handler to display errors in the javascript console
+	 * Callback for set_error_handler to display errors in the javascript console.
+	 * Don't call this function directly. Use trigger_error().
 	 *
-	 * @param $errno int
-	 * @param $errstr string
-	 * @param $errfile string
-	 * @param $errline int
+	 * @param int $errno
+	 * @param string $errstr
+	 * @param string $errfile
+	 * @param int $errline
 	 *
 	 * @return bool Always returns true
 	 */
