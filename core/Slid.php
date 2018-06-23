@@ -72,9 +72,9 @@ class Slid {
 	/**
 	 * Add a route to the routes array
 	 *
-	 * @param string $path The route path (actually not used)
+	 * @param string $path  The route path (actually not used)
 	 * @param string $regex The route path formatted as a regex to match the url
-	 * @param string $file The path to the file of the route
+	 * @param string $file  The path to the file of the route
 	 *
 	 * @return void
 	 */
@@ -89,7 +89,7 @@ class Slid {
 	/**
 	 * Generate routes from the multidimensional array, returned from getRoutesTree
 	 *
-	 * @param array  $dir The multidimensional file scan
+	 * @param array  $dir    The multidimensional file scan
 	 * @param string $prefix Don't mind this parameter, it's just needed for recursion
 	 *
 	 * @return array|bool Returns the generated routes or just false if $dir isn't an array
@@ -206,10 +206,10 @@ class Slid {
 	 * Callback for set_error_handler to display errors in the javascript console.
 	 * Don't call this function directly. Use trigger_error().
 	 *
-	 * @param int $errno
+	 * @param int    $errno
 	 * @param string $errstr
 	 * @param string $errfile
-	 * @param int $errline
+	 * @param int    $errline
 	 *
 	 * @return bool Always returns true
 	 */
