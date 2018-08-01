@@ -10,6 +10,9 @@ queries/*.json
 # Views
 views/**/*.*
 
+# Translations
+local/**/*.*
+
 # Layouts except default one
 layouts/**/*.*
 !layouts/default.spl.html

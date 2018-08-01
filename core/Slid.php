@@ -12,6 +12,10 @@ if (DATABASE) {
 	require CORE_DIR . 'DB.php';
 }
 
+if (LANG) {
+	require CORE_DIR . 'Lang.php';
+}
+
 require CORE_DIR . 'View.php';
 
 
@@ -159,7 +163,7 @@ class Slid {
 				} else {
 					// 404 - Not found
 					View::error(404);
-					View::console('File ' . $route['file'] . ' not found', error);
+					View::console('File ' . $route['file'] . ' not found', 'error');
 				}
 
 				if (function_exists($method) || function_exists('request')) {
@@ -168,7 +172,7 @@ class Slid {
 
 						if (!$valid) {
 							View::error(400);
-							View::console('Invalid request', error);
+							View::console('Invalid request', 'error');
 						}
 					}
 
