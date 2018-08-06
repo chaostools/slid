@@ -199,6 +199,29 @@ class View {
 	}
 
 	/**
+	 * Output EventStream.
+	 * This method automatically sets the Content-Type header and outputs a EventStream for JavaScript.
+	 * Useful for live data.
+	 *
+	 * @param array $lines An array containing the EventStream lines to output. Do not include "data:" or "\n"!
+	 *
+	 * @return void
+	 */
+	public static function eventStream ($lines) {
+		header('Content-Type: text/event-stream');
+
+		$output = "";
+		foreach ($lines as $line) {
+			$output .= "data: " . $line . "\n";
+		}
+
+		// Add newline at the end
+		$output .= "\n";
+
+		echo $output;
+	}
+
+	/**
 	 * Outputs an error.
 	 * This method outputs the error.php file with the specified error code and message.
 	 * If there is no error.php in the views/ directory, the default Nuxt.js error page is used.
